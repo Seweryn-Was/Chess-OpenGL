@@ -1,1 +1,2 @@
 test for pull
+git log --graph --oneline --all

@@ -155,16 +155,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< HEAD
+
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\chess_renderer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\stb_image\stb_image.cpp" />
-=======
-    <ClCompile Include="src\logika.cpp" />
->>>>>>> logika
+
+
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\board\board.frag" />

@@ -274,13 +274,8 @@ int main(void)
         glm::vec4 cursorScreenCoords = glm::inverse(projection) * glm::vec4(ndcCursor.x, ndcCursor.y, 0.0f, 1.0f);
         appdata.cursorScreenCoords = { cursorScreenCoords.x, cursorScreenCoords.y };
 
-        glm::vec4 boardscreencoords = glm::inverse(projection) * glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f);
-        boardscreencoords.x += 1.f;
+        glm::vec4 boardscreencoords = glm::inverse(projection) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         appdata.boardScreenCoords = { boardscreencoords.x, boardscreencoords.y };
-
-        glm::vec4 Menucreencoords = glm::inverse(projection) * glm::vec4(1.0f, .75f, 0.0f, 1.0f);
-        Menucreencoords.x -= 0.5f;
-        vec2 menucoords = { Menucreencoords.x, Menucreencoords.y };
 
         vec2 hoveredField;
         unsigned int currentVBO = appdata.isWhiteMove ? appdata.whitePiecesBuffers->VBO : appdata.blackPiecesBuffers->VBO; 

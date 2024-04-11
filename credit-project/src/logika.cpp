@@ -1,4 +1,5 @@
 #include<iostream>
+#include "logika.h"
 
 /*
 1, 7  = pawn
@@ -9,17 +10,7 @@
 6, 12 = king
 */
 
-struct Allowed
-{
-    int key;
-    int allowed[8][8];
 
-    Allowed(int key)
-        : key(key)
-    {
-        this->key = key;
-    }
-};
 
 Allowed(*chessboard)[8];
 int allowed[8][8];
@@ -28,37 +19,22 @@ int white_pieces_attacks[8][8]{};
 int black_pieces_attacks[8][8]{};
 int blocked_pieces[8][8];
 
-void show_chessboard(Allowed chessboard[][8]);
-void show_chessboard(int chessboard[][8]);
-Allowed(*(new_chessgame)())[8];
-void without(Allowed chessboard[][8], int without_kings[][8]);
-void piece(int y, int x, int allowed[][8]);
-void pawn(int y, int x, int allowed[][8]);
-void bishop(int y, int x, int allowed[][8]);
-void rook(int y, int x, int allowed[][8]);
-void queen(int y, int x, int allowed[][8]);
-void king(int y, int x, int allowed[][8]);
-void knight(int y, int x, int allowed[][8]);
-void everywhere_zeros(int allowed[][8]);
-void all_possible_attacks(int chessboard[][8]);
-void block_pieces(int y, int x);
-
-int main()
-{
-    chessboard = new_chessgame();
-    //everywhere_zeros(allowed);
-    int y{}, x{};
-    without(chessboard, without_kings);
-    //chessboard[3][6] = 9;
-    //chessboard[0][6] = 8;
-    //piece(6, 4, allowed);
-    //show_chessboard(chessboard);
-    //show_chessboard(white_pieces);
-    block_pieces(4, 3);
-    //show_chessboard(blocked_pieces);
-    show_chessboard(without_kings);
-    return 0;
-}
+//int main()
+//{
+//    chessboard = new_chessgame();
+//    //everywhere_zeros(allowed);
+//    int y{}, x{};
+//    without(chessboard, without_kings);
+//    //chessboard[3][6] = 9;
+//    //chessboard[0][6] = 8;
+//    //piece(6, 4, allowed);
+//    //show_chessboard(chessboard);
+//    //show_chessboard(white_pieces);
+//    block_pieces(4, 3);
+//    //show_chessboard(blocked_pieces);
+//    show_chessboard(without_kings);
+//    return 0;
+//}
 
 void all_possible_attacks(int chessboard[][8])
 {

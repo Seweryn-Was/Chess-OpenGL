@@ -7,6 +7,10 @@ bool isPathValid(const char* Filename, struct stat* b) {
 
 void CreateShaderProgram(ShaderProgarm* shader) {
 	shader->programId = glCreateProgram(); 
+    shader->shaderPathList[0] = shader->source->vert; 
+    shader->shaderPathList[1] = shader->source->frag; 
+    //std::cout << shader->shaderPathList[0] << "\n";
+    //std::cout << shader->shaderPathList[1] << "\n";
     CreateAndAttachShaderObjectsToProgram(shader);
     LinkProgram(shader); 
 }

@@ -57,7 +57,7 @@ if specific shader wasn not found replace it with shader from standard shader fo
 #define TESSELATION_SHADER_EXTENSION		".tesc"	
 #define TESS_EVALUATION_SHADER_EXTENSION	"tese"
 
-#define SHADER_SOURCE_PATH_MAX_LENGTH 100
+#define SHADER_SOURCE_PATH_MAX_LENGTH 300
 
 struct ShaderSource {
 	char frag[SHADER_SOURCE_PATH_MAX_LENGTH];
@@ -67,8 +67,8 @@ typedef struct ShaderSource ShaderSource;
 
 struct ShaderProgram {
 	unsigned int programId;
-	unsigned int shaderIdList[6];
-	char* shaderPathList[6]; 
+	unsigned int shaderIdList[2];
+	char* shaderPathList[2]; 
 	ShaderSource *source; 
 };
 typedef struct ShaderProgram ShaderProgarm;

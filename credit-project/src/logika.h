@@ -11,6 +11,9 @@ struct Allowed
         this->key = key;
     }
 };
+
+int mainLogika(); 
+
 void show_chessboard(Allowed chessboard[][8]);
 void show_chessboard(int chessboard[][8]);
 Allowed(*(new_chessgame)())[8];

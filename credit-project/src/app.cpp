@@ -2,9 +2,9 @@
 
 bool initApp(App* app) {
 
-    app->scaleUI = 0.24f;
-    app->SCR_HEIGHT = 640;
-    app->SCR_WIDTH = 1060;
+    app->scaleUI = 0.22f;
+    app->SCR_HEIGHT = 960;
+    app->SCR_WIDTH = 960;
 
     if (!glfwInit())
         return false;
@@ -28,6 +28,16 @@ bool initApp(App* app) {
         return false;
     }
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(app->window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+    ImGui_ImplOpenGL3_Init();
+
 
     SetAppData(app);
     return true;
@@ -47,10 +57,7 @@ void SetAppData(App* app)
     ShaderSource boardSource = { "./res/shaders/board/board.frag", "./res/shaders/standard/standard.vert" };
     boardShader->source = &boardSource;
     CreateShaderProgram(boardShader);
-    std::cout<<" board id1: " << boardShader->programId << "\n";
     app->data.boardShader = boardShader;
-    std::cout << " board id2: " << app->data.boardShader->programId << "\n";
-   
 }
 
 bool runApp(App* app) {
@@ -69,7 +76,11 @@ bool terminateApp(App* app) {
 
     delete app->data.boardShader;
     delete app->data.standard; 
-   
+
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return true;
 }

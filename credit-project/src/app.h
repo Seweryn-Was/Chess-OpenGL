@@ -4,6 +4,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "stb_image.h"
 
 #include <glm/glm.hpp>
@@ -39,7 +43,6 @@ struct Buffers {
     unsigned int VAO, VBO, EBO;
 };
 
-
 struct AppData {
     vec2 cursorScreenCoords; 
     vec2 boardScreenCoords; 
@@ -50,7 +53,7 @@ struct AppData {
     bool MouseLeftOnPress; 
     bool MouseLeftOnRelease; 
 
-    bool isWhiteMove; 
+    bool isWhiteMove;
 
 
 

@@ -19,22 +19,22 @@ int white_pieces_attacks[8][8]{};
 int black_pieces_attacks[8][8]{};
 int blocked_pieces[8][8];
 
-//int main()
-//{
-//    chessboard = new_chessgame();
-//    //everywhere_zeros(allowed);
-//    int y{}, x{};
-//    without(chessboard, without_kings);
-//    //chessboard[3][6] = 9;
-//    //chessboard[0][6] = 8;
-//    //piece(6, 4, allowed);
-//    //show_chessboard(chessboard);
-//    //show_chessboard(white_pieces);
-//    block_pieces(4, 3);
-//    //show_chessboard(blocked_pieces);
-//    show_chessboard(without_kings);
-//    return 0;
-//}
+int mainLogika()
+{
+    chessboard = new_chessgame();
+    //everywhere_zeros(allowed);
+    int y{}, x{};
+    without(chessboard, without_kings);
+    //chessboard[3][6] = 9;
+    //chessboard[0][6] = 8;
+    //piece(6, 4, allowed);
+    //show_chessboard(chessboard);
+    //show_chessboard(white_pieces);
+    block_pieces(4, 3);
+    //show_chessboard(blocked_pieces);
+    show_chessboard(without_kings);
+    return 0;
+}
 
 void all_possible_attacks(int chessboard[][8])
 {

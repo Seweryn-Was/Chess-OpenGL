@@ -3,6 +3,7 @@
 bool initApp(App* app) {
 
     app->scaleUI = 0.22f;
+    app->data.scaleUI = 0.22f; 
     app->SCR_HEIGHT = 960;
     app->SCR_WIDTH = 960;
 
@@ -10,7 +11,7 @@ bool initApp(App* app) {
         return false;
 
     /* Create a windowed mode window and its OpenGL context */
-    app->window = glfwCreateWindow(app->SCR_WIDTH, app->SCR_HEIGHT, "Hello World", NULL, NULL);
+    app->window = glfwCreateWindow(app->SCR_WIDTH, app->SCR_HEIGHT, "Chess Game", NULL, NULL);
     if (!app->window)
     {
         std::cout << "window wasnot created\n"; 

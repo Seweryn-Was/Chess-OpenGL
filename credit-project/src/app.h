@@ -44,6 +44,8 @@ struct Buffers {
 };
 
 struct AppData {
+    float scaleUI; 
+
     vec2 cursorScreenCoords; 
     vec2 boardScreenCoords; 
 

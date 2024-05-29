@@ -1,4 +1,5 @@
-
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "stb_image.h"
@@ -21,26 +22,26 @@ const int texturesIndexes[] = CHESS_PIECES_ARRAY_TEXTURES;
 
 bool canBePlacedthere(int x, int y) {
     if (x % 2 == 0) {
-        return true; 
+        return true;
     }
-    return false; 
+    return false;
 }
 
-void updateChessPieceVBO(unsigned int VBO, unsigned int pos, unsigned int size,ChessPiece *data) {
+void updateChessPieceVBO(unsigned int VBO, unsigned int pos, unsigned int size, ChessPiece* data) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferSubData(GL_ARRAY_BUFFER, pos * sizeof(ChessPiece), sizeof(ChessPiece), data);
 
 }
 
-bool checkCursorHoverChessPieces(AppData* data, vec2 *hoveredField, ChessPiece* &clickedPiece, int *index, int chessPieceColor) {
-    
+bool checkCursorHoverChessPieces(AppData* data, vec2* hoveredField, ChessPiece*& clickedPiece, int* index, int chessPieceColor) {
+
     ChessPiece(*curretnCheckedPieces)[ONE_COLOR_SIZE] = nullptr; ;
 
     if (chessPieceColor == BLACK_CHESS_INDEX) {
-        curretnCheckedPieces = data->blackPieces; 
+        curretnCheckedPieces = data->blackPieces;
     }
     if (chessPieceColor == WHITE_CHESS_INDEX) {
-        curretnCheckedPieces = data->WhitePieces; 
+        curretnCheckedPieces = data->WhitePieces;
     }
 
     for (int i = 0; i < ONE_COLOR_SIZE; i++) {
@@ -54,17 +55,17 @@ bool checkCursorHoverChessPieces(AppData* data, vec2 *hoveredField, ChessPiece* 
             //printf("HOVER PRESS"); 
             //std::cout << &(*data->WhitePieces)[i] << "\n"; 
             clickedPiece = &(*curretnCheckedPieces)[i];
-            *index = i; 
+            *index = i;
             checkCursorHover(data->boardLocalVert[0], 64, data->boardScreenCoords, data->cursorScreenCoords, hoveredField);
-            return true; 
+            return true;
         }
     }
-    *index = -1; 
-    clickedPiece = nullptr; 
-    return false; 
+    *index = -1;
+    clickedPiece = nullptr;
+    return false;
 }
 
-void translateChessPiece(ChessPiece* clickedPiece, vec2 offset, vec2 *totalOffset) {
+void translateChessPiece(ChessPiece* clickedPiece, vec2 offset, vec2* totalOffset) {
     clickedPiece->vertecies[0].x += offset.x;
     clickedPiece->vertecies[0].y += offset.y;
     clickedPiece->vertecies[1].x += offset.x;
@@ -73,11 +74,12 @@ void translateChessPiece(ChessPiece* clickedPiece, vec2 offset, vec2 *totalOffse
     clickedPiece->vertecies[2].y += offset.y;
     clickedPiece->vertecies[3].x += offset.x;
     clickedPiece->vertecies[3].y += offset.y;
-    
-    totalOffset->x += offset.x; 
-    totalOffset->y += offset.y; 
+
+    totalOffset->x += offset.x;
+    totalOffset->y += offset.y;
 }
-void setChessPiecePosOnBoard(ChessPiece *clickedPiece, vec2 posOnBoard, float scaleUI){
+
+void setChessPiecePosOnBoard(ChessPiece* clickedPiece, vec2 posOnBoard, float scaleUI) {
     clickedPiece->vertecies[0].x = (-0.5f + posOnBoard.x) * scaleUI;
     clickedPiece->vertecies[0].y = (-0.5f + posOnBoard.y) * scaleUI;
     clickedPiece->vertecies[1].x = (0.5f + posOnBoard.x) * scaleUI;
@@ -88,28 +90,41 @@ void setChessPiecePosOnBoard(ChessPiece *clickedPiece, vec2 posOnBoard, float sc
     clickedPiece->vertecies[3].y = (0.5f + posOnBoard.y) * scaleUI;
 }
 
-struct UIrect {
-    vec3 vert[4];
-    vec3 color[4]; 
-};
+void loadFromFile(const char* loadFile, AppData* data) {
+    FILE* file = nullptr;
+    errno_t err = fopen_s(&file, loadFile, "r");
+    if (err != 0) {
+        perror("Nie mo¿na otworzyæ pliku do odczytu ");
+        return;
+    }
+    vec2 loc = {};
+    for (int i = 0; i < ONE_COLOR_SIZE; i++) {
 
-//void mouseButtonLeft(AppData *appdata) {
-//    appdata.mouseBtnLeftPress = (glfwGetMouseButton(app.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
-//    if (appdata.mouseBtnLeftPress && !appdata.mouseBtnLeftPressClicked)
-//    {
-//        printf("ON PRESS\n");
-//        appdata.mouseBtnLeftPressClicked = true;
-//    }
-//    else {
-//        if (appdata.mouseBtnLeftPressClicked == true && appdata.mouseBtnLeftPress == false) {
-//            printf("ON REALEASE\n");
-//            //appdata->MouseLeftOnRelease = 
-//        }
-//        if (appdata.mouseBtnLeftPress == false) appdata.mouseBtnLeftPressClicked = false;
-//    }
-//}
+        fscanf(file, "%f %f", &loc.x, &loc.y); 
 
-void ChoseSlotToLoadGame_PopUp(const char* question) {
+        printf("%f",loc.x);
+        printf(" %f \n", loc.y);
+  
+        (*data->WhitePieces)[i] = createChessPiece({ loc.x - 4 + 0.5f, loc.y - 4 + 0.5f }, texturesIndexes[i], WHITE_CHESS_INDEX, data->scaleUI);
+    }
+
+    
+    glBindBuffer(GL_ARRAY_BUFFER, data->whitePiecesBuffers->VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, data->WhitePieces);
+   
+    printf("-----\n"); 
+    for (int i = 0; i < ONE_COLOR_SIZE; i++) {
+        fscanf(file, "%f %f", &loc.x, &loc.y);
+
+        (*data->blackPieces)[i] = createChessPiece({ loc.x - 4 + 0.5f, loc.y - 4 + 0.5f }, texturesIndexes[i], BLACK_CHESS_INDEX, data->scaleUI);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, data->blackPiecesBuffers->VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, data->blackPieces);
+    // Zamkniêcie pliku
+    fclose(file);
+}
+
+void ChoseSlotToLoadGame_PopUp(const char* question, AppData* data) {
     
     static bool shouldChose = false; 
     static bool confirmAction = false; 
@@ -129,7 +144,8 @@ void ChoseSlotToLoadGame_PopUp(const char* question) {
             // Do something for Option 1
             ImGui::CloseCurrentPopup();
             shouldChose = false;
-            confirmAction = true; 
+            confirmAction = true;
+            //loadFromFile("slot_1.txt", &data); 
             chosenSlot = 1;
         }
         ImGui::SameLine();
@@ -138,6 +154,8 @@ void ChoseSlotToLoadGame_PopUp(const char* question) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
+
+            //loadFromFile("slot_2.txt", &data);
             chosenSlot = 2;
         }
         ImGui::SameLine();
@@ -146,6 +164,7 @@ void ChoseSlotToLoadGame_PopUp(const char* question) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
+            //loadFromFile("slot_3.txt", &data);
             chosenSlot = 3; 
         }
         if (ImGui::Button("Cancel")) {
@@ -165,6 +184,18 @@ void ChoseSlotToLoadGame_PopUp(const char* question) {
         if (ImGui::Button("YES")) {
             confirmAction = false;
             //LOAD THAT GAME
+            switch (chosenSlot) {
+            case 1 : 
+                loadFromFile("slot_1.txt", data);
+                break;
+            case 2:
+                loadFromFile("slot_2.txt", data);
+                break; 
+            case 3:
+                loadFromFile("slot_3.txt", data);
+                break; 
+
+            }
             printf("LOAD GAME %d\n", chosenSlot);
             ImGui::CloseCurrentPopup();
         }
@@ -178,7 +209,31 @@ void ChoseSlotToLoadGame_PopUp(const char* question) {
     }
 }
 
-void ChoseSlotToSaveGame_PopUp(const char* question) {
+void saveToFIle(const char* slotFile, AppData data) {
+    FILE* file = fopen(slotFile, "w");
+    if (file == NULL) {
+        perror("Nie mo¿na otworzyæ pliku");
+        return;
+    }
+
+    // Zapisanie elementów tablicy do pliku
+    for (int i = 0; i < ONE_COLOR_SIZE; i++) {
+
+        fprintf(file, "%f", ((*data.WhitePieces)[i].vertecies->x / data.scaleUI) + 4.0f);
+        fprintf(file, " %f \n", ((*data.WhitePieces)[i].vertecies->y / data.scaleUI) + 4.0f);
+    }
+    fprintf(file, "\n"); 
+    for (int i = 0; i < ONE_COLOR_SIZE; i++) {
+
+        fprintf(file, "%f", ((*data.blackPieces)[i].vertecies->x / data.scaleUI) + 4.0f);
+        fprintf(file, " %f \n", ((*data.blackPieces)[i].vertecies->y / data.scaleUI) + 4.0f);
+    }
+
+    // Zamkniêcie pliku
+    fclose(file);
+}
+
+void ChoseSlotToSaveGame_PopUp(const char* question, AppData data) {
 
     static bool shouldChose = false;
     static bool confirmAction = false;
@@ -199,6 +254,7 @@ void ChoseSlotToSaveGame_PopUp(const char* question) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
+            saveToFIle("slot_1.txt", data); 
             chosenSlot = 1;
         }
         ImGui::SameLine();
@@ -207,6 +263,7 @@ void ChoseSlotToSaveGame_PopUp(const char* question) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
+            saveToFIle("slot_2.txt", data);
             chosenSlot = 2;
         }
         ImGui::SameLine();
@@ -215,6 +272,7 @@ void ChoseSlotToSaveGame_PopUp(const char* question) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
+            saveToFIle("slot_3.txt", data);
             chosenSlot = 3;
         }
         if (ImGui::Button("Cancel")) {
@@ -250,7 +308,6 @@ void ChoseSlotToSaveGame_PopUp(const char* question) {
 int main(void)
 {
     App app;
-    //AppData appdata;
 
     if (!initApp(&app)) {
         return -1;
@@ -372,7 +429,8 @@ int main(void)
     bool isMenuOpen = false; 
     bool selectSlot = false; 
     bool confirmAction = false; 
-    while (!glfwWindowShouldClose(app.window)) {
+    bool shouldClose = false; 
+    while (!glfwWindowShouldClose(app.window) && !shouldClose) {
 
         glfwPollEvents();
         glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
@@ -380,9 +438,17 @@ int main(void)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        //printf("Running"); 
 
         glfwGetFramebufferSize(app.window, &app.SCR_WIDTH, &app.SCR_HEIGHT);
         glViewport(0, 0, app.SCR_WIDTH, app.SCR_HEIGHT);
+
+        ImGui::Begin("Move"); 
+        if (app.data.isWhiteMove)
+            ImGui::Text("White Move");
+        else
+            ImGui::Text("Black Move"); 
+        ImGui::End(); 
 
         if (isMenuOpen) {
             ImGui::Begin("MENU", NULL, 0);
@@ -397,6 +463,7 @@ int main(void)
                 ImGui::Text("Are you sure, you want to restart game?\nYour game will be lost.");
                 if (ImGui::Button("YES")) {
                     confirmAction = false;
+                    app.data.isWhiteMove = true; 
                     //RESTART GAME
                     for (int i = 0; i < ONE_COLOR_SIZE; i++) {
                         (*app.data.WhitePieces)[i] = createChessPiece({ positionsWhite[i].x - 4 + 0.5f, positionsWhite[i].y - 4 + 0.5f }, texturesIndexes[i], WHITE_CHESS_INDEX, app.scaleUI);
@@ -419,12 +486,21 @@ int main(void)
                 ImGui::EndPopup();
             }
 
-            ChoseSlotToLoadGame_PopUp("from what slot load chess game");
+            ChoseSlotToLoadGame_PopUp("from what slot load chess game", &app.data);
             
-            ChoseSlotToSaveGame_PopUp("to what slot save game?");
+            ChoseSlotToSaveGame_PopUp("to what slot save game?", app.data);
 
-            if(ImGui::Button("Quit")){
+            if(ImGui::Button("Resume")){
+                for (int i = 0; i < ONE_COLOR_SIZE; i++) {
+                  
+                    printf("piece: %f [] ", ((*app.data.WhitePieces)[i].vertecies->x/app.scaleUI) + 4.0f);
+                    printf("%f \n", ((*app.data.WhitePieces)[i].vertecies->y / app.scaleUI) + 4.0f );
+                }
+                
                 isMenuOpen = false;
+            }
+            if (ImGui::Button("Quit Game")) {
+                shouldClose = true; 
             }
             ImGui::End();
         }
@@ -485,6 +561,17 @@ int main(void)
                 checkCursorHover(app.data.boardLocalVert[0], 64, app.data.boardScreenCoords, app.data.cursorScreenCoords, &hoveredField); 
                 if(clickedPiece!=nullptr)
                 if (canBePlacedthere(hoveredField.x, hoveredField.y)) {
+                    bool shouldOpenPopUpToselectChessPiece = false; 
+                    if (app.data.isWhiteMove && hoveredField.y == 7) {
+                        printf("bialy doszedlem na osatnie pole chcl sie zmeinic\n");
+                        shouldOpenPopUpToselectChessPiece = true; 
+                        //Pop up
+                    }
+                    if (!app.data.isWhiteMove && hoveredField.y == 0) {
+                        printf("czarny doszedlem na osatnie pole chcl sie zmeinic\n");
+                        shouldOpenPopUpToselectChessPiece = true;
+                        //Pop up
+                    }
                     app.data.isWhiteMove = !app.data.isWhiteMove; 
                     vec2 posOnBoard = { hoveredField.x - 4 + 0.5f, hoveredField.y - 4 + 0.5f };
                     setChessPiecePosOnBoard(clickedPiece, posOnBoard, app.scaleUI);

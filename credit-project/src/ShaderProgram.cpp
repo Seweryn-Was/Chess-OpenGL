@@ -64,7 +64,7 @@ void UnUseShaderPrograms() {
 
 void DeleteShaderProgram(ShaderProgarm* shader) {
     glDeleteProgram(shader->programId); 
-    shader->programId = 0; 
+    //shader->programId = 0; 
 }
 
 

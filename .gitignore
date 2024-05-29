@@ -5,6 +5,8 @@
 
 *.vcxproj.filters
 
+slot_*.txt
+
 # User-specific files
 *.rsuser
 *.suo

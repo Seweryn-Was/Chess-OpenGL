@@ -1,6 +1,8 @@
 #ifndef APP_LOGIC
 #define APP_LOGIC
-#include <iostream>
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -16,6 +18,12 @@
 
 #include "ShaderProgram.h"
 #include "chess_renderer.h"
+
+#include "logika.h"
+
+const vec2 positionsWhite[] = WHITE_START_POSITIONS;
+const vec2 positionsBlack[] = BLACK_START_POSITIONS;
+const int texturesIndexes[] = CHESS_PIECES_ARRAY_TEXTURES;
 
 #define LAYOUT_LOCATION_POS 0 
 #define LAYOUT_LOCATION_COLOR 1 
@@ -39,6 +47,9 @@ UI:
     TIME 2
 */
 
+//{ KING, QUEEN, BISHOP, BISHOP, KNIGHT, KNIGHT, ROOK,   ROOK, PAWN,   PAWN,   PAWN,   PAWN,  PAWN,   PAWN,   PAWN, PAWN }
+
+
 struct Buffers {
     unsigned int VAO, VBO, EBO;
 };
@@ -56,6 +67,11 @@ struct AppData {
     bool MouseLeftOnRelease; 
 
     bool isWhiteMove;
+    bool isMate; 
+    bool canMakeMove;
+
+    ChessPiece* activePiece; 
+    ChessPiece* lastClickedPiece; 
 
 
 

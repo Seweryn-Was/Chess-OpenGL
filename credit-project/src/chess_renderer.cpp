@@ -51,7 +51,7 @@ void CreateBoardBuffer(chessBoardSquare* board, uivec3* boardIndicies, float sca
     for (int y = 0; y < 8; y++) {
         for (int x = 0; x < 8; x++) {
             int squareIndex = BOARD_SIDE_SIZE * y + x;
-            vec3 pos = { x - 3.5f, y - 3.5f, 0.0 };
+            vec3 pos = { x - 3.5f, y - 3.5f, 0.05f };
             vec3 color{};
 
             int colorIndex = ((squareIndex % 4) + (y % 2)) % 2;
@@ -103,10 +103,10 @@ ChessPiece createChessPiece(vec2 positionOnBoard, unsigned int chessPieceIndex, 
     float xlen = CHESS_TEXTURE_UV_WIDTH, ylen = CHESS_TEXTURE_UV_HEIGHT;
     float posx = chessPieceIndex, posy = chessPieceColorIndex;
     vec2 relativePos = { positionOnBoard.x * scale, positionOnBoard.y * scale };
-    toReturn.vertecies[0] = { -0.5f * scale + relativePos.x, -0.5f * scale + relativePos.y, 0.0, posx * xlen       , posy * ylen, chessPieceIndex };
-    toReturn.vertecies[1] = { 0.5f * scale + relativePos.x, -0.5f * scale + relativePos.y, 0.0, posx * xlen + xlen, posy * ylen , chessPieceIndex };
-    toReturn.vertecies[2] = { 0.5f * scale + relativePos.x,  0.5f * scale + relativePos.y, 0.0, posx * xlen + xlen, posy * ylen + ylen, chessPieceIndex };
-    toReturn.vertecies[3] = { -0.5f * scale + relativePos.x,  0.5f * scale + relativePos.y, 0.0, posx * xlen,        posy * ylen + ylen  , chessPieceIndex };
+    toReturn.vertecies[0] = { -0.5f * scale + relativePos.x, -0.5f * scale + relativePos.y, 0.1, posx * xlen       , posy * ylen, chessPieceIndex };
+    toReturn.vertecies[1] = { 0.5f * scale + relativePos.x, -0.5f * scale + relativePos.y, 0.1, posx * xlen + xlen, posy * ylen , chessPieceIndex };
+    toReturn.vertecies[2] = { 0.5f * scale + relativePos.x,  0.5f * scale + relativePos.y, 0.1, posx * xlen + xlen, posy * ylen + ylen, chessPieceIndex };
+    toReturn.vertecies[3] = { -0.5f * scale + relativePos.x,  0.5f * scale + relativePos.y, 0.1, posx * xlen,        posy * ylen + ylen  , chessPieceIndex };
     return toReturn;
 }
 

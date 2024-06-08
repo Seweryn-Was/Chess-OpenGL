@@ -13,24 +13,26 @@ bool lost_black{ false }, lost_white{ false }, black_downfall{ false }, white_do
 
 bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
 {
-    printf("start %d , %d", y_start, x_start); 
-    printf("start %d , %d", y_end, x_end);
     Allowed temp{ 0 };
     everywhere_zeros(holy_land_black);
     everywhere_zeros(holy_land_white);
     black_downfall = false;
     white_downfall = false;
     all_possible_moves(chessboard);
+    show_chessboard(chessboard[y_start][x_start].allowed);
+    printf("\n");
+    show_chessboard(chessboard);
+    printf("\n");
     if (chessboard[y_start][x_start].key >= 7)
     {
         block_pieces(black_king[0], black_king[1]);
         if (chessboard[y_start][x_start].key == 12)
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1)
+            if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
@@ -41,11 +43,11 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         if (black_downfall)
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1 && holy_land_black[y_end][x_start])
+            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1 && holy_land_black[y_end][x_end])
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
@@ -56,11 +58,11 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         else
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1)
+            if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
@@ -75,11 +77,11 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         block_pieces(white_king[0], white_king[1]);
         if (chessboard[y_start][x_start].key == 6)
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1)
+            if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
@@ -90,11 +92,11 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         if (white_downfall)
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1 && holy_land_white[y_end][x_start])
+            if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1 && holy_land_white[y_end][x_end])
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
                 return true;
             }
@@ -105,7 +107,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         else
         {
-            if (chessboard[y_start][x_start].allowed[y_end][x_start] == 1)
+            if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
                 temp = chessboard[y_start][x_start];
                 chessboard[y_start][x_start] = chessboard[y_end][x_end];
@@ -143,6 +145,16 @@ void all_possible_attacks(int chessboard[][8], int kolor)
                 pawn_attack(i, j, black_pieces_attacks);
                 continue;
             }
+            if (chessboard[i][j] == 12 && kolor == 1)
+            {
+                king(i, j, black_pieces_attacks, chessboard);
+                continue;
+            }
+            if (chessboard[i][j] == 6 && kolor == 2)
+            {
+                king(i, j, white_pieces_attacks, chessboard);
+                continue;
+            }
             if (chessboard[i][j] < 7 && chessboard[i][j] != 0 && kolor == 2)
             {
                 white_pieces_attacks[i][j] = 1;
@@ -175,12 +187,14 @@ void all_possible_moves(Allowed chessboard[][8])
         {
             if (chessboard[i][j].key < 7 && chessboard[i][j].key != 0)
             {
-                everywhere_zeros(allowed);
+                everywhere_zeros(chessboard[i][j].allowed);
                 piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
             if (chessboard[i][j].key >= 7)
             {
-                everywhere_zeros(allowed);
+
+                everywhere_zeros(chessboard[i][j].allowed);
+
                 piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
         }
@@ -200,12 +214,15 @@ void without(Allowed chessboard[][8], int without_kings[][8], int kolor)
 
 void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int holy_land[][8])
 {
+    black_downfall = false;
+    white_downfall = false;
+    everywhere_zeros(white_pieces_attacks);
+    everywhere_zeros(black_pieces_attacks);
     everywhere_zeros(holy_land);
     without(chessboard, without_kings, color);
     all_possible_attacks(without_kings, color);
 
     int_chessgame(chessboard);
-
     block_pieces(y, x);
 
     lost = true;
@@ -282,7 +299,6 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
                 chessboard[y + i][x + j].key = 1;
                 without(chessboard, without_kings, color);
                 all_possible_attacks(without_kings, color);
-                std::cout << '\n';
                 //show_chessboard(without_kings);
                 if (black_pieces_attacks[y + i][x + j] == 0)
                 {
@@ -300,7 +316,6 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
                 chessboard[y + i][x + j].key = 7;
                 without(chessboard, without_kings, color);
                 all_possible_attacks(without_kings, color);
-                std::cout << '\n';
                 //show_chessboard(without_kings);
                 if (white_pieces_attacks[y + i][x + j] == 0)
                 {
@@ -376,19 +391,19 @@ void show_chessboard(int chessboard[][8])
 }
 
 Allowed(*(new_chessgame)())[8]
-{
-    static Allowed fresh_chessboard[8][8] = {
-        {2, 3, 4, 5, 6 ,4, 3, 2},
-        {1, 1, 1, 1, 1, 1, 1, 1},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {7, 7, 7, 7, 7, 7, 7, 7},
-        {8, 9, 10, 11, 12 ,10, 9, 8}
-    };
-    return fresh_chessboard;
-}
+    {
+        static Allowed fresh_chessboard[8][8] = {
+            {2, 3, 4, 5, 6 ,4, 3, 2},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {7, 7, 7, 7, 7, 7, 7, 7},
+            {8, 9, 10, 11, 12 ,10, 9, 8}
+        };
+        return fresh_chessboard;
+    }
 
 
 Allowed(*(clean_chessgame)())[8]
@@ -574,11 +589,11 @@ Allowed(*(clean_chessgame)())[8]
                     allowed[y - i][x] = 1;
                 else break;
             if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6)
+                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
                     allowed[y - 1][x - 1] = 1;
             if (x + 1 <= 7)
-                if (chessboard[y - 1][x - 1] <= 6)
-                    allowed[y - 1][x - 1] = 1;
+                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                    allowed[y - 1][x + 1] = 1;
             return;
         }
         if (chessboard[y][x] == 7)
@@ -586,11 +601,11 @@ Allowed(*(clean_chessgame)())[8]
             if (chessboard[y - 1][x] == 0)
                 allowed[y - 1][x] = 1;
             if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6)
+                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
                     allowed[y - 1][x - 1] = 1;
             if (x + 1 <= 7)
-                if (chessboard[y - 1][x - 1] <= 6)
-                    allowed[y - 1][x - 1] = 1;
+                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                    allowed[y - 1][x + 1] = 1;
             return;
         }
         if (chessboard[y][x] == 1)

@@ -10,7 +10,7 @@ bool canBePlacedthere(int x, int y) {
 bool isMate() {
     static int x = 0;
     x += 1; 
-    if (x >= 7)
+    if (x < 0)
         return true;
     else
         return false; 

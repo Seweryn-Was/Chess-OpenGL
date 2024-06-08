@@ -16,6 +16,7 @@ int main(void)
     vec2 clickCursorPosLast{};
     vec2 totalOffset{};
 
+
     vec2 toField = {};
     vec2 fromField = {};
 
@@ -272,7 +273,6 @@ int main(void)
 
         glfwSwapBuffers(app.window);
     }
-
     terminateApp(&app); 
 
     return 0;

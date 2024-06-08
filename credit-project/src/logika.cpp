@@ -184,12 +184,12 @@ void all_possible_moves(Allowed chessboard[][8])
         {
             if (chessboard[i][j].key < 7 && chessboard[i][j].key != 0)
             {
-                everywhere_zeros(allowed);
+                everywhere_zeros(chessboard[i][j].allowed);
                 piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
             if (chessboard[i][j].key >= 7)
             {
-                everywhere_zeros(allowed);
+                everywhere_zeros(chessboard[i][j].allowed);
                 piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
         }
@@ -568,11 +568,11 @@ Allowed(*(new_chessgame)())[8]
                     allowed[y - i][x] = 1;
                 else break;
             if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6)
+                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
                     allowed[y - 1][x - 1] = 1;
             if (x + 1 <= 7)
-                if (chessboard[y - 1][x - 1] <= 6)
-                    allowed[y - 1][x - 1] = 1;
+                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                    allowed[y - 1][x + 1] = 1;
             return;
         }
         if (chessboard[y][x] == 7)
@@ -580,11 +580,11 @@ Allowed(*(new_chessgame)())[8]
             if (chessboard[y - 1][x] == 0)
                 allowed[y - 1][x] = 1;
             if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6)
+                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
                     allowed[y - 1][x - 1] = 1;
             if (x + 1 <= 7)
-                if (chessboard[y - 1][x - 1] <= 6)
-                    allowed[y - 1][x - 1] = 1;
+                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                    allowed[y - 1][x + 1] = 1;
             return;
         }
         if (chessboard[y][x] == 1)

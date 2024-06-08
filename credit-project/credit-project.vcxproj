@@ -155,12 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClCompile Include="src\logika.cpp" />
-=======
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
->>>>>>> 0ad9cb77b5682cf404246c4a24eedf5b5a8b3b12
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\pullTest.txt" />

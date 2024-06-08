@@ -19,8 +19,6 @@
 #include "ShaderProgram.h"
 #include "chess_renderer.h"
 
-#include "logika.h"
-
 const vec2 positionsWhite[] = WHITE_START_POSITIONS;
 const vec2 positionsBlack[] = BLACK_START_POSITIONS;
 const int texturesIndexes[] = CHESS_PIECES_ARRAY_TEXTURES;

@@ -1,5 +1,8 @@
 #include "app.h"
 #include "temp.h"
+#include "logika.h"
+
+extern Allowed(*chessboard)[8];
 
 int main(void)
 {
@@ -9,13 +12,11 @@ int main(void)
         return -1;
     }
 
-    //mainLogika();
-
-   
+    chessboard = new_chessgame(); 
+  
     app.data.isWhiteMove = true; 
     vec2 clickCursorPosLast{};
     vec2 totalOffset{};
-
 
     vec2 toField = {};
     vec2 fromField = {};
@@ -188,7 +189,7 @@ int main(void)
                     checkCursorHover(app.data.boardLocalVert[0], 64, app.data.boardScreenCoords, app.data.cursorScreenCoords, &toField); 
                 
                 if(app.data.activePiece !=nullptr)
-                if (!(toField.x == fromField.x && toField.y == fromField.y) && canBePlacedthere(toField.x, toField.y) ){
+                if (!(toField.x == fromField.x && toField.y == fromField.y) && is_move_allowed(7 - fromField.y, fromField.x, 7- toField.y, toField.x)) {
                     shouldOpenPopUpToselectChessPiece = false;
 
                     bringBack(app.data.activePiece);

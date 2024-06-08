@@ -99,6 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glew32s.lib; opengl32.lib; glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/GLFW/lib; $(SolutionDir)dependencies/GLEW/lib</AdditionalLibraryDirectories>
+      <StackReserveSize>16777216</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,6 +119,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glew32s.lib; opengl32.lib; glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/GLFW/lib; $(SolutionDir)dependencies/GLEW/lib</AdditionalLibraryDirectories>
+      <StackReserveSize>16777216</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,6 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/GLFW/lib; $(SolutionDir)dependencies/GLEW/lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glew32s.lib; opengl32.lib; glfw3.lib</AdditionalDependencies>
+      <StackReserveSize>16777216</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,6 +155,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glew32s.lib; opengl32.lib; glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/GLFW/lib; $(SolutionDir)dependencies/GLEW/lib</AdditionalLibraryDirectories>
+      <StackReserveSize>16777216</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

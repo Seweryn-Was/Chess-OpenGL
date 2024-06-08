@@ -96,6 +96,9 @@ int main(void)
                         (*app.data.blackPieces)[i] = createChessPiece({ positionsBlack[i].x - 4 + 0.5f, positionsBlack[i].y - 4 + 0.5f }, texturesIndexes[i], BLACK_CHESS_INDEX, app.scaleUI);
                     }
 
+                    chessboard = new_chessgame(); 
+                    show_chessboard(chessboard);
+
                     glBindBuffer(GL_ARRAY_BUFFER, app.data.whitePiecesBuffers->VBO);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, app.data.WhitePieces);
                     glBindBuffer(GL_ARRAY_BUFFER, app.data.blackPiecesBuffers->VBO);
@@ -191,6 +194,8 @@ int main(void)
                 if(app.data.activePiece !=nullptr)
                 if (!(toField.x == fromField.x && toField.y == fromField.y) && is_move_allowed(7 - fromField.y, fromField.x, 7- toField.y, toField.x)) {
                     shouldOpenPopUpToselectChessPiece = false;
+
+                    show_chessboard(chessboard); 
 
                     bringBack(app.data.activePiece);
                     updateChessPieceVBO(currentVBO, index, sizeof(ChessPiece), app.data.activePiece);

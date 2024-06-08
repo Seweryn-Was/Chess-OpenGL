@@ -13,8 +13,8 @@ bool lost_black{ false }, lost_white{ false }, black_downfall{ false }, white_do
 
 bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
 {
-    printf("end y: %d, x: %d \n", y_end, x_end);
-    printf("start y: %d, x: %d \n", y_start, x_start);
+    printf("start %d , %d", y_start, x_start); 
+    printf("start %d , %d", y_end, x_end);
     Allowed temp{ 0 };
     everywhere_zeros(holy_land_black);
     everywhere_zeros(holy_land_white);
@@ -119,6 +119,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
             }
         }
     }
+    return false;
 }
 
 void all_possible_attacks(int chessboard[][8], int kolor)
@@ -168,6 +169,7 @@ void int_chessgame(Allowed chessboard[][8])
 
 void all_possible_moves(Allowed chessboard[][8])
 {
+    int_chessgame(chessboard);
     for (int i = 0; i < 8; ++i)
         for (int j = 0; j < 8; ++j)
         {
@@ -179,7 +181,7 @@ void all_possible_moves(Allowed chessboard[][8])
             if (chessboard[i][j].key >= 7)
             {
                 everywhere_zeros(allowed);
-                piece(i, j, black_pieces_attacks, chessboard_int);
+                piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
         }
 }
@@ -203,14 +205,6 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
     all_possible_attacks(without_kings, color);
 
     int_chessgame(chessboard);
-
-    for (int i = 0; i < 8; ++i)
-    {
-        for (int j = 0; j < 8; ++j)
-        {
-            piece(i, j, chessboard[i][j].allowed, chessboard_int);
-        }
-    }
 
     block_pieces(y, x);
 
@@ -289,7 +283,7 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
                 without(chessboard, without_kings, color);
                 all_possible_attacks(without_kings, color);
                 std::cout << '\n';
-                show_chessboard(without_kings);
+                //show_chessboard(without_kings);
                 if (black_pieces_attacks[y + i][x + j] == 0)
                 {
                     lost = false;
@@ -307,7 +301,7 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
                 without(chessboard, without_kings, color);
                 all_possible_attacks(without_kings, color);
                 std::cout << '\n';
-                show_chessboard(without_kings);
+                //show_chessboard(without_kings);
                 if (white_pieces_attacks[y + i][x + j] == 0)
                 {
                     lost = false;
@@ -395,6 +389,22 @@ Allowed(*(new_chessgame)())[8]
     };
     return fresh_chessboard;
 }
+
+
+Allowed(*(clean_chessgame)())[8]
+    {
+        static Allowed fresh_chessboard[8][8] = {
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0}
+        };
+        return fresh_chessboard;
+    }
 
     void block_pieces(int y, int x)
     {

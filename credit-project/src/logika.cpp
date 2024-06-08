@@ -13,7 +13,6 @@ bool lost_black{ false }, lost_white{ false }, black_downfall{ false }, white_do
 
 bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
 {
-    Allowed temp{ 0 };
     everywhere_zeros(holy_land_black);
     everywhere_zeros(holy_land_white);
     black_downfall = false;
@@ -109,9 +108,9 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         {
             if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
-                temp = chessboard[y_start][x_start];
-                chessboard[y_start][x_start] = chessboard[y_end][x_end];
-                chessboard[y_end][x_end] = temp;
+                chessboard[y_end][x_end] = chessboard[y_start][x_start];
+                chessboard[y_start][x_start].key = 0;
+                everywhere_zeros(chessboard[y_start][x_start].allowed);
                 szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
                 return true;
             }

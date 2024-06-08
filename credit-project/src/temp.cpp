@@ -112,10 +112,6 @@ void loadFromFile(const char* loadFile, AppData* data) {
 
         fscanf(file, "%d ", &id); 
         fscanf(file, "%f %f", &loc.x, &loc.y);
-
-        printf("%f", loc.x);
-        printf(" %f \n", loc.y);
-
         (*data->WhitePieces)[i] = createChessPiece({ loc.x - 4 + 0.5f, loc.y - 4 + 0.5f }, id, WHITE_CHESS_INDEX, data->scaleUI);
     }
 
@@ -132,6 +128,9 @@ void loadFromFile(const char* loadFile, AppData* data) {
     }
     glBindBuffer(GL_ARRAY_BUFFER, data->blackPiecesBuffers->VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, data->blackPieces);
+    int isMate; 
+    fscanf(file, "%d", &isMate);
+    data->isMate = isMate; 
     // Zamkniêcie pliku
     fclose(file);
 }
@@ -216,33 +215,26 @@ void ChoseSlotToLoadGame_PopUp(const char* question, AppData* data) {
         ImGui::OpenPopup("Choose Slot"); // Open the dialog popup
     }
 
-    if (ImGui::BeginPopupModal("Choose Slot", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Choose Slot", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
         ImGui::Text(question);
         if (ImGui::Button("Slot 1")) {
-            // Do something for Option 1
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
-            //loadFromFile("slot_1.txt", &data); 
             chosenSlot = 1;
         }
         ImGui::SameLine();
         if (ImGui::Button("Slot 2")) {
-            // Do something for Option 2
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
-
-            //loadFromFile("slot_2.txt", &data);
             chosenSlot = 2;
         }
         ImGui::SameLine();
         if (ImGui::Button("Slot 3")) {
-            // Do something for Option 3
             ImGui::CloseCurrentPopup();
             shouldChose = false;
             confirmAction = true;
-            //loadFromFile("slot_3.txt", &data);
             chosenSlot = 3;
         }
         if (ImGui::Button("Cancel")) {
@@ -274,12 +266,10 @@ void ChoseSlotToLoadGame_PopUp(const char* question, AppData* data) {
                 break;
 
             }
-            printf("LOAD GAME %d\n", chosenSlot);
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine();
         if (ImGui::Button("NO")) {
-            //DO NOTHING
             confirmAction = false;
             ImGui::CloseCurrentPopup();
         }
@@ -308,7 +298,7 @@ void saveToFIle(const char* slotFile, AppData data) {
         fprintf(file, "%f", ((*data.blackPieces)[i].vertecies->x / data.scaleUI) + 4.0f);
         fprintf(file, " %f \n", ((*data.blackPieces)[i].vertecies->y / data.scaleUI) + 4.0f);
     }
-
+    fprintf(file, "%d ", data.isMate);
     // Zamkniêcie pliku
     fclose(file);
 }
@@ -329,7 +319,7 @@ void ChoseSlotToSaveGame_PopUp(const char* question, AppData data) {
         ImGui::OpenPopup("Choose Slot save"); // Open the dialog popup
     }
 
-    if (ImGui::BeginPopupModal("Choose Slot save", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Choose Slot save", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
         ImGui::Text(question);
         if (ImGui::Button("Slot 1")) {
             // Do something for Option 1

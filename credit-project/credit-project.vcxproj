@@ -623,6 +623,11 @@
     <Image Include="res\textures\container.jpg" />
     <Image Include="res\textures\MCdirt.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="slot_1.txt" />
+    <Text Include="slot_2.txt" />
+    <Text Include="slot_3.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

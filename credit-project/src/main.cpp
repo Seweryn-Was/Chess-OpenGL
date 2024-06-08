@@ -43,12 +43,12 @@ int main(void)
         glfwGetFramebufferSize(app.window, &app.SCR_WIDTH, &app.SCR_HEIGHT);
         glViewport(0, 0, app.SCR_WIDTH, app.SCR_HEIGHT);
  
-
+        ImVec2 size = ImGui::GetIO().DisplaySize;
 
         if (app.data.isMate) {
-
-            ImGui::Begin("MATE"); 
-            ImGui::Text("MATE"); 
+            ImGui::SetNextWindowPos(ImVec2(size.x / 2 - (int)(200 / 2), size.y / 2-175));
+            ImGui::SetNextWindowSize({ 200, 80 });
+            ImGui::Begin("MATE", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
             if (app.data.isWhiteMove) {
                 ImGui::Text("BLACK WON!!!"); 
             }
@@ -58,24 +58,30 @@ int main(void)
             ImGui::End(); 
         }
 
+        ImGui::SetNextWindowPos(ImVec2(size.x/2 - (int)(845/2), 12));
+        ImGui::SetNextWindowSize({845, 25});
 
-        ImGui::Begin("Move"); 
+        ImGui::Begin("Move", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
         if (app.data.isWhiteMove)
             ImGui::Text("White Move");
         else
             ImGui::Text("Black Move"); 
         ImGui::End(); 
 
+
         if (isMenuOpen) {
-            ImGui::Begin("MENU", NULL, 0);
+            ImGui::SetNextWindowPos(ImVec2(size.x / 2 - (int)(200 / 2), size.y/2 - 160/2));
+            ImGui::SetNextWindowSize({ 200, 160 });
+            ImGui::Begin("MENU", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
             if (ImGui::Button("RESTART")) {
                 confirmAction = true; 
             }
             if (confirmAction) {
-                ImGui::OpenPopup("My Dialog"); // Open the dialog popup
+                ImGui::OpenPopup("Restart");
             }
 
-            if (ImGui::BeginPopupModal("My Dialog", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::BeginPopupModal("Restart", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
                 ImGui::Text("Are you sure, you want to restart game?\nYour game will be lost.");
                 if (ImGui::Button("YES")) {
                     confirmAction = false;
@@ -92,12 +98,10 @@ int main(void)
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, app.data.WhitePieces);
                     glBindBuffer(GL_ARRAY_BUFFER, app.data.blackPiecesBuffers->VBO);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, app.data.blackPieces);
-                    printf("RESTART\n"); 
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine(); 
                 if (ImGui::Button("NO")) {
-                    //DO NOTHING
                     confirmAction = false;
                     ImGui::CloseCurrentPopup();
                 }
@@ -109,12 +113,6 @@ int main(void)
             ChoseSlotToSaveGame_PopUp("to what slot save game?", app.data);
 
             if(ImGui::Button("Resume")){
-                for (int i = 0; i < ONE_COLOR_SIZE; i++) {
-                  
-                    printf("piece: %f [] ", ((*app.data.WhitePieces)[i].vertecies->x/app.scaleUI) + 4.0f);
-                    printf("%f \n", ((*app.data.WhitePieces)[i].vertecies->y / app.scaleUI) + 4.0f );
-                }
-                
                 isMenuOpen = false;
             }
             if (ImGui::Button("Quit Game")) {
@@ -201,7 +199,6 @@ int main(void)
                     }
 
                     if (app.data.isWhiteMove && toField.y == 7 && app.data.activePiece->vertecies[0].pieceId == PAWN_TEXTURE_INDEX) {
-                        printf("bialy doszedlem na osatnie pole chcl sie zmeinic\n");
                         shouldOpenPopUpToselectChessPiece = true; 
                         app.data.canMakeMove = false;
                         indexTOChangePiece = index;
@@ -209,7 +206,6 @@ int main(void)
                         //Pop up
                     }
                     if (!app.data.isWhiteMove && toField.y == 0 && app.data.activePiece->vertecies[0].pieceId == PAWN_TEXTURE_INDEX) {
-                        printf("czarny doszedlem na osatnie pole chcl sie zmeinic\n");
                         shouldOpenPopUpToselectChessPiece = true;
                         app.data.canMakeMove = false; 
                         indexTOChangePiece = index;

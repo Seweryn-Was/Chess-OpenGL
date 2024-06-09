@@ -1,4 +1,7 @@
 #include "temp.h"
+#include "logika.h"
+
+extern Allowed(*chessboard)[8];
 
 bool canBePlacedthere(int x, int y) {
     if (x % 2 == 0) {
@@ -102,6 +105,10 @@ void loadFromFile(const char* loadFile, AppData* data) {
         perror("Nie mo¿na otworzyæ pliku do odczytu ");
         return;
     }
+
+    printf("loadFile\n");
+    clean_chessGame(chessboard); 
+    show_chessboard(chessboard); 
     vec2 loc = {};
     int move;
     int id; 
@@ -113,6 +120,7 @@ void loadFromFile(const char* loadFile, AppData* data) {
         fscanf(file, "%d ", &id); 
         fscanf(file, "%f %f", &loc.x, &loc.y);
         (*data->WhitePieces)[i] = createChessPiece({ loc.x - 4 + 0.5f, loc.y - 4 + 0.5f }, id, WHITE_CHESS_INDEX, data->scaleUI);
+        chessboard[(int)(7 - loc.y)][(int)loc.x] = 6 - id + 6;
     }
 
 
@@ -125,12 +133,15 @@ void loadFromFile(const char* loadFile, AppData* data) {
         fscanf(file, "%f %f", &loc.x, &loc.y);
 
         (*data->blackPieces)[i] = createChessPiece({ loc.x - 4 + 0.5f, loc.y - 4 + 0.5f }, id, BLACK_CHESS_INDEX, data->scaleUI);
+        chessboard[(int)(7 - loc.y)][(int)loc.x] = 6 - id ;
     }
+    show_chessboard(chessboard);
     glBindBuffer(GL_ARRAY_BUFFER, data->blackPiecesBuffers->VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, data->blackPieces);
     int isMate; 
     fscanf(file, "%d", &isMate);
     data->isMate = isMate; 
+    data->canMakeMove = !isMate;
     // Zamkniêcie pliku
     fclose(file);
 }

@@ -206,7 +206,9 @@ void all_possible_moves(Allowed chessboard[][8])
             }
             if (chessboard[i][j].key >= 7)
             {
+
                 everywhere_zeros(chessboard[i][j].allowed);
+
                 piece(i, j, chessboard[i][j].allowed, chessboard_int);
             }
         }
@@ -234,8 +236,6 @@ void szachen_machen(int y, int x, int color, bool& lost, bool& is_downfall, int 
 
 
     int_chessgame(chessboard);
-
-
     block_pieces(y, x);
 
     lost = true;
@@ -408,19 +408,33 @@ void show_chessboard(int chessboard[][8])
 }
 
 Allowed(*(new_chessgame)())[8]
-    {
-        static Allowed fresh_chessboard[8][8] = {
-            {2, 3, 4, 5, 6 ,4, 3, 2},
-            {1, 1, 1, 1, 1, 1, 1, 1},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {7, 7, 7, 7, 7, 7, 7, 7},
-            {8, 9, 10, 11, 12 ,10, 9, 8}
-        };
-        return fresh_chessboard;
+{
+    static Allowed fresh_chessboard[8][8] = {
+        {2, 3, 4, 5, 6 ,4, 3, 2},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {7, 7, 7, 7, 7, 7, 7, 7},
+        {8, 9, 10, 11, 12 ,10, 9, 8}
+    };
+    return fresh_chessboard;
+}
+
+void clean_chessGame(Allowed(*arr)[8])
+{
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            arr[i][j] = 0; 
+        }
     }
+}
+
+void restart_chessGame(Allowed(*arr)[8]) {
+    arr = new_chessgame(); 
+}
+
 
 void block_pieces(int y, int x)
 {
@@ -500,510 +514,506 @@ void block_pieces(int y, int x)
                 allowed[i][j] = 0;
     }
 
-    void piece(int y, int x, int allowed[][8], int chessboard[][8])
+void piece(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    switch (chessboard[y][x])
     {
-        switch (chessboard[y][x])
-        {
-        case 1:
-            pawn(y, x, allowed, chessboard);
-            break;
-        case 7:
-            pawn(y, x, allowed, chessboard);
-            break;
-        case 2:
-            rook(y, x, allowed, chessboard);
-            break;
-        case 8:
-            rook(y, x, allowed, chessboard);
-            break;
-        case 3:
-            knight(y, x, allowed, chessboard);
-            break;
-        case 9:
-            knight(y, x, allowed, chessboard);
-            break;
-        case 4:
-            bishop(y, x, allowed, chessboard);
-            break;
-        case 10:
-            bishop(y, x, allowed, chessboard);
-            break;
-        case 5:
-            queen(y, x, allowed, chessboard);
-            break;
-        case 11:
-            queen(y, x, allowed, chessboard);
-            break;
-        case 6:
-            white_king[0] = y;
-            white_king[1] = x;
-            white_downfall = false;
-            everywhere_zeros(black_pieces_attacks);
-            szachen_machen(y, x, 1, lost_white, white_downfall, holy_land_white);
-            break;
-        case 12:
-            black_king[0] = y;
-            black_king[1] = x;
-            black_downfall = false;
-            everywhere_zeros(white_pieces_attacks);
-            szachen_machen(y, x, 2, lost_black, black_downfall, holy_land_black);
-            break;
-        default:
-            break;
-        }
+    case 1:
+        pawn(y, x, allowed, chessboard);
+        break;
+    case 7:
+        pawn(y, x, allowed, chessboard);
+        break;
+    case 2:
+        rook(y, x, allowed, chessboard);
+        break;
+    case 8:
+        rook(y, x, allowed, chessboard);
+        break;
+    case 3:
+        knight(y, x, allowed, chessboard);
+        break;
+    case 9:
+        knight(y, x, allowed, chessboard);
+        break;
+    case 4:
+        bishop(y, x, allowed, chessboard);
+        break;
+    case 10:
+        bishop(y, x, allowed, chessboard);
+        break;
+    case 5:
+        queen(y, x, allowed, chessboard);
+        break;
+    case 11:
+        queen(y, x, allowed, chessboard);
+        break;
+    case 6:
+        white_king[0] = y;
+        white_king[1] = x;
+        szachen_machen(y, x, 1, lost_white, white_downfall, holy_land_white);
+        break;
+    case 12:
+        black_king[0] = y;
+        black_king[1] = x;
+        szachen_machen(y, x, 2, lost_black, black_downfall, holy_land_black);
+        break;
+    default:
+        break;
     }
+}
 
-    void pawn_attack(int y, int x, int allowed[][8])
+void pawn_attack(int y, int x, int allowed[][8])
+{
+    if (chessboard[y][x].key == 1)
     {
-        if (chessboard[y][x].key == 1)
-        {
-            if (x + 1 < 8)
-                allowed[y + 1][x + 1] = 1;
-            if (x - 1 > -1)
+        if (x + 1 < 8)
+            allowed[y + 1][x + 1] = 1;
+        if (x - 1 > -1)
+            allowed[y + 1][x - 1] = 1;
+    }
+    if (chessboard[y][x].key == 7)
+    {
+        if (x - 1 > -1)
+            allowed[y - 1][x - 1] = 1;
+        if (x - 1 > -1)
+            allowed[y - 1][x + 1] = 1;
+    }
+}
+
+void pawn(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    if (y == 1 && chessboard[y][x] == 1)
+    {
+        for (int i = 1; i <= 2; i++)
+            if (chessboard[y + i][x] == 0)
+                allowed[y + i][x] = 1;
+            else break;
+        if (x - 1 >= 0)
+            if (chessboard[y + 1][x - 1] >= 7)
                 allowed[y + 1][x - 1] = 1;
-        }
-        if (chessboard[y][x].key == 7)
-        {
-            if (x - 1 > -1)
-                allowed[y - 1][x - 1] = 1;
-            if (x - 1 > -1)
-                allowed[y - 1][x + 1] = 1;
-        }
+        if (x + 1 <= 7)
+            if (chessboard[y + 1][x + 1] >= 7)
+                allowed[y + 1][x + 1] = 1;
+        return;
     }
-
-    void pawn(int y, int x, int allowed[][8], int chessboard[][8])
+    if (y == 6 && chessboard[y][x] == 7)
     {
-        if (y == 1 && chessboard[y][x] == 1)
+        for (int i = 1; i <= 2; i++)
+            if (chessboard[y - i][x] == 0)
+                allowed[y - i][x] = 1;
+            else break;
+        if (x - 1 >= 0)
+            if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
+                allowed[y - 1][x - 1] = 1;
+        if (x + 1 <= 7)
+            if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                allowed[y - 1][x + 1] = 1;
+        return;
+    }
+    if (chessboard[y][x] == 7)
+    {
+        if (chessboard[y - 1][x] == 0)
+            allowed[y - 1][x] = 1;
+        if (x - 1 >= 0)
+            if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
+                allowed[y - 1][x - 1] = 1;
+        if (x + 1 <= 7)
+            if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
+                allowed[y - 1][x + 1] = 1;
+        return;
+    }
+    if (chessboard[y][x] == 1)
+    {
+        if (chessboard[y + 1][x] == 0)
+            allowed[y + 1][x] = 1;
+        if (x - 1 >= 0)
+            if (chessboard[y + 1][x - 1] >= 7)
+                allowed[y + 1][x - 1] = 1;
+        if (x + 1 <= 7)
+            if (chessboard[y + 1][x + 1] >= 7)
+                allowed[y + 1][x + 1] = 1;
+        return;
+    }
+}
+
+void bishop(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    int i = 1;
+    if (chessboard[y][x] < 7)
+    {
+        while (y + i < 8 && x + i < 8)
         {
-            for (int i = 1; i <= 2; i++)
-                if (chessboard[y + i][x] == 0)
-                    allowed[y + i][x] = 1;
-                else break;
-            if (x - 1 >= 0)
-                if (chessboard[y + 1][x - 1] >= 7)
-                    allowed[y + 1][x - 1] = 1;
-            if (x + 1 <= 7)
-                if (chessboard[y + 1][x + 1] >= 7)
-                    allowed[y + 1][x + 1] = 1;
-            return;
+            int new_y = y + i;
+            int new_x = x + i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+                break;
+            i++;
         }
-        if (y == 6 && chessboard[y][x] == 7)
+        i = 1;
+        while (y - i >= 0 && x + i < 8)
         {
-            for (int i = 1; i <= 2; i++)
-                if (chessboard[y - i][x] == 0)
-                    allowed[y - i][x] = 1;
-                else break;
-            if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
-                    allowed[y - 1][x - 1] = 1;
-            if (x + 1 <= 7)
-                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
-                    allowed[y - 1][x + 1] = 1;
-            return;
+            int new_y = y - i;
+            int new_x = x + i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+                break;
+            i++;
         }
-        if (chessboard[y][x] == 7)
+        i = 1;
+        while (y + i < 8 && x - i >= 0)
         {
-            if (chessboard[y - 1][x] == 0)
-                allowed[y - 1][x] = 1;
-            if (x - 1 >= 0)
-                if (chessboard[y - 1][x - 1] <= 6 && chessboard[y - 1][x - 1] != 0)
-                    allowed[y - 1][x - 1] = 1;
-            if (x + 1 <= 7)
-                if (chessboard[y - 1][x + 1] <= 6 && chessboard[y - 1][x + 1] != 0)
-                    allowed[y - 1][x + 1] = 1;
-            return;
+            int new_y = y + i;
+            int new_x = x - i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+                break;
+            i++;
         }
-        if (chessboard[y][x] == 1)
+        i = 1;
+        while (y - i >= 0 && x - i >= 0)
         {
-            if (chessboard[y + 1][x] == 0)
-                allowed[y + 1][x] = 1;
-            if (x - 1 >= 0)
-                if (chessboard[y + 1][x - 1] >= 7)
-                    allowed[y + 1][x - 1] = 1;
-            if (x + 1 <= 7)
-                if (chessboard[y + 1][x + 1] >= 7)
-                    allowed[y + 1][x + 1] = 1;
-            return;
+            int new_y = y - i;
+            int new_x = x - i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+                break;
+            i++;
         }
     }
+    if (chessboard[y][x] >= 7)
+    {
+        i = 1;
+        while (y + i < 8 && x + i < 8)
+        {
+            int new_y = y + i;
+            int new_x = x + i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+                break;
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
+        while (y - i >= 0 && x + i < 8)
+        {
+            int new_y = y - i;
+            int new_x = x + i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+                break;
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
+        while (y + i < 8 && x - i >= 0)
+        {
+            int new_y = y + i;
+            int new_x = x - i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+                break;
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
+        while (y - i >= 0 && x - i >= 0)
+        {
+            int new_y = y - i;
+            int new_x = x - i;
+            if (chessboard[new_y][new_x] == 0)
+                allowed[new_y][new_x] = 1;
+            if (chessboard[new_y][new_x] >= 7)
+                break;
+            if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
+            {
+                allowed[new_y][new_x] = 1;
+                break;
+            }
+            i++;
+        }
+    }
+}
 
-    void bishop(int y, int x, int allowed[][8], int chessboard[][8])
+void rook(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    if (chessboard[y][x] <= 7)
     {
         int i = 1;
-        if (chessboard[y][x] < 7)
+        while (x - i >= 0)
         {
-            while (y + i < 8 && x + i < 8)
+            int new_x = x - i;
+            if (chessboard[y][new_x] == 0)
+                allowed[y][new_x] = 1;
+            if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
+                break;
+            if (chessboard[y][new_x] >= 7)
             {
-                int new_y = y + i;
-                int new_x = x + i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                    break;
-                i++;
+                allowed[y][new_x] = 1;
+                break;
             }
-            i = 1;
-            while (y - i >= 0 && x + i < 8)
-            {
-                int new_y = y - i;
-                int new_x = x + i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                    break;
-                i++;
-            }
-            i = 1;
-            while (y + i < 8 && x - i >= 0)
-            {
-                int new_y = y + i;
-                int new_x = x - i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                    break;
-                i++;
-            }
-            i = 1;
-            while (y - i >= 0 && x - i >= 0)
-            {
-                int new_y = y - i;
-                int new_x = x - i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                    break;
-                i++;
-            }
+            i++;
         }
-        if (chessboard[y][x] >= 7)
+        i = 1;
+        while (x + i < 8)
         {
-            i = 1;
-            while (y + i < 8 && x + i < 8)
+            int new_x = x + i;
+            if (chessboard[y][new_x] == 0)
+                allowed[y][new_x] = 1;
+            if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
+                break;
+            if (chessboard[y][new_x] >= 7)
             {
-                int new_y = y + i;
-                int new_x = x + i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                    break;
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                i++;
+                allowed[y][new_x] = 1;
+                break;
             }
-            i = 1;
-            while (y - i >= 0 && x + i < 8)
-            {
-                int new_y = y - i;
-                int new_x = x + i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                    break;
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y + i < 8 && x - i >= 0)
-            {
-                int new_y = y + i;
-                int new_x = x - i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                    break;
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y - i >= 0 && x - i >= 0)
-            {
-                int new_y = y - i;
-                int new_x = x - i;
-                if (chessboard[new_y][new_x] == 0)
-                    allowed[new_y][new_x] = 1;
-                if (chessboard[new_y][new_x] >= 7)
-                    break;
-                if (chessboard[new_y][new_x] < 7 && chessboard[new_y][new_x] != 0)
-                {
-                    allowed[new_y][new_x] = 1;
-                    break;
-                }
-                i++;
-            }
+            i++;
         }
+        i = 1;
+        while (y - i >= 0)
+        {
+            int new_y = y - i;
+            if (chessboard[new_y][x] == 0)
+                allowed[new_y][x] = 1;
+            if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
+                break;
+            if (chessboard[new_y][x] >= 7)
+            {
+                allowed[new_y][x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
+        while (y + i < 8)
+        {
+            int new_y = y + i;
+            if (chessboard[new_y][x] == 0)
+                allowed[new_y][x] = 1;
+            if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
+                break;
+            if (chessboard[new_y][x] >= 7)
+            {
+                allowed[new_y][x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
     }
-
-    void rook(int y, int x, int allowed[][8], int chessboard[][8])
+    if (chessboard[y][x] > 7)
     {
-        if (chessboard[y][x] <= 7)
+        int i = 1;
+        while (x - i >= 0)
         {
-            int i = 1;
-            while (x - i >= 0)
+            int new_x = x - i;
+            if (chessboard[y][new_x] == 0)
+                allowed[y][new_x] = 1;
+            if (chessboard[y][new_x] >= 7)
+                break;
+            if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
             {
-                int new_x = x - i;
-                if (chessboard[y][new_x] == 0)
-                    allowed[y][new_x] = 1;
-                if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
-                    break;
-                if (chessboard[y][new_x] >= 7)
-                {
-                    allowed[y][new_x] = 1;
-                    break;
-                }
-                i++;
+                allowed[y][new_x] = 1;
+                break;
             }
-            i = 1;
-            while (x + i < 8)
-            {
-                int new_x = x + i;
-                if (chessboard[y][new_x] == 0)
-                    allowed[y][new_x] = 1;
-                if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
-                    break;
-                if (chessboard[y][new_x] >= 7)
-                {
-                    allowed[y][new_x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y - i >= 0)
-            {
-                int new_y = y - i;
-                if (chessboard[new_y][x] == 0)
-                    allowed[new_y][x] = 1;
-                if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
-                    break;
-                if (chessboard[new_y][x] >= 7)
-                {
-                    allowed[new_y][x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y + i < 8)
-            {
-                int new_y = y + i;
-                if (chessboard[new_y][x] == 0)
-                    allowed[new_y][x] = 1;
-                if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
-                    break;
-                if (chessboard[new_y][x] >= 7)
-                {
-                    allowed[new_y][x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
+            i++;
         }
-        if (chessboard[y][x] > 7)
+        i = 1;
+        while (x + i < 8)
         {
-            int i = 1;
-            while (x - i >= 0)
+            int new_x = x + i;
+            if (chessboard[y][new_x] == 0)
+                allowed[y][new_x] = 1;
+            if (chessboard[y][new_x] >= 7)
+                break;
+            if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
             {
-                int new_x = x - i;
-                if (chessboard[y][new_x] == 0)
-                    allowed[y][new_x] = 1;
-                if (chessboard[y][new_x] >= 7)
-                    break;
-                if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
-                {
-                    allowed[y][new_x] = 1;
-                    break;
-                }
-                i++;
+                allowed[y][new_x] = 1;
+                break;
             }
-            i = 1;
-            while (x + i < 8)
-            {
-                int new_x = x + i;
-                if (chessboard[y][new_x] == 0)
-                    allowed[y][new_x] = 1;
-                if (chessboard[y][new_x] >= 7)
-                    break;
-                if (chessboard[y][new_x] < 7 && chessboard[y][new_x] != 0)
-                {
-                    allowed[y][new_x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y - i >= 0)
-            {
-                int new_y = y - i;
-                if (chessboard[new_y][x] == 0)
-                    allowed[new_y][x] = 1;
-                if (chessboard[new_y][x] >= 7)
-                    break;
-                if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
-                {
-                    allowed[new_y][x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
-            while (y + i < 8)
-            {
-                int new_y = y + i;
-                if (chessboard[new_y][x] == 0)
-                    allowed[new_y][x] = 1;
-                if (chessboard[new_y][x] >= 7)
-                    break;
-                if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
-                {
-                    allowed[new_y][x] = 1;
-                    break;
-                }
-                i++;
-            }
-            i = 1;
+            i++;
         }
+        i = 1;
+        while (y - i >= 0)
+        {
+            int new_y = y - i;
+            if (chessboard[new_y][x] == 0)
+                allowed[new_y][x] = 1;
+            if (chessboard[new_y][x] >= 7)
+                break;
+            if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
+            {
+                allowed[new_y][x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
+        while (y + i < 8)
+        {
+            int new_y = y + i;
+            if (chessboard[new_y][x] == 0)
+                allowed[new_y][x] = 1;
+            if (chessboard[new_y][x] >= 7)
+                break;
+            if (chessboard[new_y][x] < 7 && chessboard[new_y][x] != 0)
+            {
+                allowed[new_y][x] = 1;
+                break;
+            }
+            i++;
+        }
+        i = 1;
     }
+}
 
-    void queen(int y, int x, int allowed[][8], int chessboard[][8])
+void queen(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    bishop(y, x, allowed, chessboard);
+    rook(y, x, allowed, chessboard);
+}
+
+void king(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    if (chessboard[y][x] == 6)
     {
-        bishop(y, x, allowed, chessboard);
-        rook(y, x, allowed, chessboard);
-    }
-
-    void king(int y, int x, int allowed[][8], int chessboard[][8])
-    {
-        if (chessboard[y][x] == 6)
-        {
-            for (int i = -1; i < 2; ++i)
-                for (int j = -1; j < 2; ++j)
-                {
-                    if (y + i < 0 || y + i >= 8 || x + j < 0 || x + j >= 8)
-                        continue;
-                    if (chessboard[y + i][x + j] == 6)
-                        continue;
-                    if (chessboard[y + i][x + j] == 0)
-                    {
-                        allowed[y + i][x + j] = 1;
-                        continue;
-                    }
-                    if (chessboard[y + i][x + j] >= 7)
-                    {
-                        allowed[y + i][x + j] = 1;
-                        continue;
-                    }
-                }
-        }
-        if (chessboard[y][x] == 12)
-        {
-            for (int i = -1; i < 2; ++i)
-                for (int j = -1; j < 2; ++j)
-                {
-                    if (y + i < 0 || y + i >= 8 || x + j < 0 || x + j >= 8)
-                        continue;
-                    if (chessboard[y + i][x + j] == 12)
-                        continue;
-                    if (chessboard[y + i][x + j] < 7 && chessboard[y + i][x + j] != 0)
-                    {
-                        allowed[y + i][x + j] = 1;
-                        continue;
-                    }
-                    if (chessboard[y + i][x + j] == 0)
-                    {
-                        allowed[y + i][x + j] = 1;
-                        continue;
-                    }
-                }
-        }
-    }
-
-    void knight(int y, int x, int allowed[][8], int chessboard[][8])
-    {
-        if (chessboard[y][x] == 3)
-        {
-            for (int i = -2; i <= 2; i += 4)
+        for (int i = -1; i < 2; ++i)
+            for (int j = -1; j < 2; ++j)
             {
-                int new_x = x + i;
-                int new_y = y + i;
-                for (int j = -1; j <= 1; j += 2)
+                if (y + i < 0 || y + i >= 8 || x + j < 0 || x + j >= 8)
+                    continue;
+                if (chessboard[y + i][x + j] == 6)
+                    continue;
+                if (chessboard[y + i][x + j] == 0)
                 {
-                    int new_x2 = x + j;
-                    int new_y2 = y + j;
-                    if (new_x >= 0 && new_x < 8 && new_y2 >= 0 && new_y2 < 8)
-                    {
-                        if (chessboard[new_y2][new_x] >= 7)
-                            allowed[new_y2][new_x] = 1;
-                        if (chessboard[new_y2][new_x] == 0)
-                            allowed[new_y2][new_x] = 1;
-                    }
-                    if (new_y >= 0 && new_y < 8 && new_x2 >= 0 && new_x2 < 8)
-                    {
-                        if (chessboard[new_y][new_x2] >= 7)
-                            allowed[new_y][new_x2] = 1;
-                        if (chessboard[new_y][new_x2] == 0)
-                            allowed[new_y][new_x2] = 1;
-                    }
+                    allowed[y + i][x + j] = 1;
+                    continue;
+                }
+                if (chessboard[y + i][x + j] >= 7)
+                {
+                    allowed[y + i][x + j] = 1;
+                    continue;
                 }
             }
-        }
-
-        if (chessboard[y][x] == 9)
-        {
-            for (int i = -2; i <= 2; i += 4)
+    }
+    if (chessboard[y][x] == 12)
+    {
+        for (int i = -1; i < 2; ++i)
+            for (int j = -1; j < 2; ++j)
             {
-                int new_x = x + i;
-                int new_y = y + i;
-                for (int j = -1; j <= 1; j += 2)
+                if (y + i < 0 || y + i >= 8 || x + j < 0 || x + j >= 8)
+                    continue;
+                if (chessboard[y + i][x + j] == 12)
+                    continue;
+                if (chessboard[y + i][x + j] < 7 && chessboard[y + i][x + j] != 0)
                 {
-                    int new_x2 = x + j;
-                    int new_y2 = y + j;
-                    if (new_x >= 0 && new_x < 8 && new_y2 >= 0 && new_y2 < 8)
-                    {
-                        if (chessboard[new_y2][new_x] < 7 && chessboard[new_y2][new_x] != 0)
-                            allowed[new_y2][new_x] = 1;
-                        if (chessboard[new_y2][new_x] == 0)
-                            allowed[new_y2][new_x] = 1;
-                    }
-                    if (new_y >= 0 && new_y < 8 && new_x2 >= 0 && new_x2 < 8)
-                    {
-                        if (chessboard[new_y][new_x2] < 7 && chessboard[new_y][new_x2] != 0)
-                            allowed[new_y][new_x2] = 1;
-                        if (chessboard[new_y][new_x2] == 0)
-                            allowed[new_y][new_x2] = 1;
-                    }
+                    allowed[y + i][x + j] = 1;
+                    continue;
+                }
+                if (chessboard[y + i][x + j] == 0)
+                {
+                    allowed[y + i][x + j] = 1;
+                    continue;
+                }
+            }
+    }
+}
+
+void knight(int y, int x, int allowed[][8], int chessboard[][8])
+{
+    if (chessboard[y][x] == 3)
+    {
+        for (int i = -2; i <= 2; i += 4)
+        {
+            int new_x = x + i;
+            int new_y = y + i;
+            for (int j = -1; j <= 1; j += 2)
+            {
+                int new_x2 = x + j;
+                int new_y2 = y + j;
+                if (new_x >= 0 && new_x < 8 && new_y2 >= 0 && new_y2 < 8)
+                {
+                    if (chessboard[new_y2][new_x] >= 7)
+                        allowed[new_y2][new_x] = 1;
+                    if (chessboard[new_y2][new_x] == 0)
+                        allowed[new_y2][new_x] = 1;
+                }
+                if (new_y >= 0 && new_y < 8 && new_x2 >= 0 && new_x2 < 8)
+                {
+                    if (chessboard[new_y][new_x2] >= 7)
+                        allowed[new_y][new_x2] = 1;
+                    if (chessboard[new_y][new_x2] == 0)
+                        allowed[new_y][new_x2] = 1;
                 }
             }
         }
     }
+
+    if (chessboard[y][x] == 9)
+    {
+        for (int i = -2; i <= 2; i += 4)
+        {
+            int new_x = x + i;
+            int new_y = y + i;
+            for (int j = -1; j <= 1; j += 2)
+            {
+                int new_x2 = x + j;
+                int new_y2 = y + j;
+                if (new_x >= 0 && new_x < 8 && new_y2 >= 0 && new_y2 < 8)
+                {
+                    if (chessboard[new_y2][new_x] < 7 && chessboard[new_y2][new_x] != 0)
+                        allowed[new_y2][new_x] = 1;
+                    if (chessboard[new_y2][new_x] == 0)
+                        allowed[new_y2][new_x] = 1;
+                }
+                if (new_y >= 0 && new_y < 8 && new_x2 >= 0 && new_x2 < 8)
+                {
+                    if (chessboard[new_y][new_x2] < 7 && chessboard[new_y][new_x2] != 0)
+                        allowed[new_y][new_x2] = 1;
+                    if (chessboard[new_y][new_x2] == 0)
+                        allowed[new_y][new_x2] = 1;
+                }
+            }
+        }
+    }
+}

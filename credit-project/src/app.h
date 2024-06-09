@@ -19,6 +19,9 @@
 #include "ShaderProgram.h"
 #include "chess_renderer.h"
 
+#define WINDOW_WIDTH 960 
+#define WINDOW_HEIGHT 960
+
 const vec2 positionsWhite[] = WHITE_START_POSITIONS;
 const vec2 positionsBlack[] = BLACK_START_POSITIONS;
 const int texturesIndexes[] = CHESS_PIECES_ARRAY_TEXTURES;
@@ -70,6 +73,9 @@ struct AppData {
 
     ChessPiece* activePiece; 
     ChessPiece* lastClickedPiece; 
+
+    vec2 fromMove; 
+    vec2 toMove; 
 
 
 

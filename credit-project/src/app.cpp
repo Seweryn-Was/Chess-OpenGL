@@ -4,8 +4,8 @@ bool initApp(App* app) {
 
     app->scaleUI = 0.22f;
     app->data.scaleUI = 0.22f; 
-    app->SCR_HEIGHT = 960;
-    app->SCR_WIDTH = 960;
+    app->SCR_HEIGHT = WINDOW_HEIGHT;
+    app->SCR_WIDTH = WINDOW_WIDTH;
 
     if (!glfwInit())
         return false;

@@ -44,6 +44,7 @@ int main(void)
         ImGui::NewFrame();
 
         glfwGetFramebufferSize(app.window, &app.SCR_WIDTH, &app.SCR_HEIGHT);
+        glfwSetWindowSize(app.window, WINDOW_WIDTH, WINDOW_HEIGHT); 
         glViewport(0, 0, app.SCR_WIDTH, app.SCR_HEIGHT);
  
         ImVec2 size = ImGui::GetIO().DisplaySize;
@@ -71,12 +72,6 @@ int main(void)
         else
             ImGui::Text("Black Move"); 
 
-        ImGui::SameLine(); 
-        if (ImGui::Button("PRINT")) {
-            system("cls"); 
-            printf("Print:\n"); 
-            show_chessboard(chessboard); 
-        }
         ImGui::End(); 
 
 
@@ -137,7 +132,6 @@ int main(void)
         EscPress = (glfwGetKey(app.window, GLFW_KEY_ESCAPE) == GLFW_PRESS);
 
         if (EscPress && !EscPressClicked){ //Press
-            printf("OPEN MENU\n");
             EscPressClicked = true; 
             isMenuOpen = !isMenuOpen; 
         }
@@ -150,10 +144,16 @@ int main(void)
 
         if (shouldOpenPopUpToselectChessPiece) {
             if (ChoseNewChessPiece_PopUp("na jaka figure zmienic pionka?", &(app.data))) {
-                printf("end\n"); 
                 updateChessPieceVBO(!app.data.isWhiteMove ? app.data.whitePiecesBuffers->VBO : app.data.blackPiecesBuffers->VBO, indexTOChangePiece, sizeof(ChessPiece), app.data.lastClickedPiece);
                 shouldOpenPopUpToselectChessPiece = false; 
                 app.data.canMakeMove = true; 
+                all_possible_moves(chessboard); 
+                all_possible_moves(chessboard);
+
+                if (lost_white || lost_black) {
+                    app.data.isMate = true;
+                    app.data.canMakeMove = false;
+                }
             }
         }
 
@@ -202,8 +202,9 @@ int main(void)
                 if(app.data.activePiece !=nullptr)
                 if (!(toField.x == fromField.x && toField.y == fromField.y) && is_move_allowed(7 - fromField.y, fromField.x, 7- toField.y, toField.x)) {
                     shouldOpenPopUpToselectChessPiece = false;
-                    printf("move\n"); 
-                    show_chessboard(chessboard); 
+                    
+                    app.data.fromMove = fromField; 
+                    app.data.toMove = toField; 
 
                     bringBack(app.data.activePiece);
                     updateChessPieceVBO(currentVBO, index, sizeof(ChessPiece), app.data.activePiece);

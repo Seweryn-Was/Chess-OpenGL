@@ -168,14 +168,14 @@ bool ChoseNewChessPiece_PopUp(const char* question, AppData* data) {
     bool result = false; ;
 
 
-    ImGui::OpenPopup("Choose Slot"); // Open the dialog popup
+    ImGui::OpenPopup("Choose Piece"); // Open the dialog popup
 
-    if (ImGui::BeginPopupModal("Choose Slot", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Choose Piece", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse )) {
         ImGui::Text(question);
         if (ImGui::Button("Rook")) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
-
+            chessboard[(int)(7 - data->toMove.y)][(int)data->toMove.x] = data->isWhiteMove ? 2 : 8; 
             ChangePieceType(data->lastClickedPiece, ROOK_TEXTURE_INDEX);
             result =  true; 
         }
@@ -183,6 +183,7 @@ bool ChoseNewChessPiece_PopUp(const char* question, AppData* data) {
         if (ImGui::Button("Bishop")) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
+            chessboard[(int)(7 - data->toMove.y)][(int)data->toMove.x] = data->isWhiteMove ? 4 : 10;
             ChangePieceType(data->lastClickedPiece, BISHOP_TEXTURE_INDEX);
             result = true;
 
@@ -191,6 +192,7 @@ bool ChoseNewChessPiece_PopUp(const char* question, AppData* data) {
         if (ImGui::Button("Queen")) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
+            chessboard[(int)(7 - data->toMove.y)][(int)data->toMove.x] = data->isWhiteMove ? 5 : 11;
             ChangePieceType(data->lastClickedPiece, QUEEN_TEXTURE_INDEX);
             result = true;
 
@@ -199,6 +201,7 @@ bool ChoseNewChessPiece_PopUp(const char* question, AppData* data) {
         if (ImGui::Button("Knight")) {
             ImGui::CloseCurrentPopup();
             shouldChose = false;
+            chessboard[(int)(7 - data->toMove.y)][(int)data->toMove.x] = data->isWhiteMove ? 3 : 9;
             ChangePieceType(data->lastClickedPiece, KNIGHT_TEXTURE_INDEX);
 
             result = true;
@@ -375,7 +378,6 @@ void ChoseSlotToSaveGame_PopUp(const char* question, AppData data) {
         if (ImGui::Button("YES")) {
             confirmAction = false;
             //LOAD THAT GAME
-            printf("SAVE GAME to slot %d\n", chosenSlot);
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine();

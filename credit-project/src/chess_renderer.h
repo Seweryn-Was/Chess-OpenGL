@@ -58,7 +58,14 @@ enum chessPieceColor {
     BLACK_CHESS_INDEX = 0
 };
 
-
+/*
+1, 7  = pawn
+2, 8  = rook
+3, 9  = knight
+4, 10 = bishop
+5, 11 = queen
+6, 12 = king
+*/
 enum chessPieceTexIndex {
     KING_TEXTURE_INDEX = 0,
     QUEEN_TEXTURE_INDEX = 1,

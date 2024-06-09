@@ -23,7 +23,7 @@ struct Allowed
 void show_chessboard(Allowed chessboard[][8]);
 void show_chessboard(int chessboard[][8]);
 Allowed(*(new_chessgame)())[8];
-Allowed(*(clean_chessgame)())[8];
+void clean_chessGame(Allowed(*arr)[8]);
 void without(Allowed chessboard[][8], int without_kings[][8], int kolor);
 void piece(int y, int x, int allowed[][8], int chessboard[][8]);
 void pawn(int y, int x, int allowed[][8], int chessboard[][8]);

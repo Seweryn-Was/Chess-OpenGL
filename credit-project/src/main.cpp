@@ -3,6 +3,7 @@
 #include "logika.h"
 
 extern Allowed(*chessboard)[8];
+extern bool lost_black, lost_white;
 
 int main(void)
 {
@@ -69,6 +70,13 @@ int main(void)
             ImGui::Text("White Move");
         else
             ImGui::Text("Black Move"); 
+
+        ImGui::SameLine(); 
+        if (ImGui::Button("PRINT")) {
+            system("cls"); 
+            printf("Print:\n"); 
+            show_chessboard(chessboard); 
+        }
         ImGui::End(); 
 
 
@@ -91,13 +99,13 @@ int main(void)
                     app.data.isMate = false; 
                     app.data.canMakeMove = true;
                     //RESTART GAME
+                    clean_chessGame(chessboard);
                     for (int i = 0; i < ONE_COLOR_SIZE; i++) {
                         (*app.data.WhitePieces)[i] = createChessPiece({ positionsWhite[i].x - 4 + 0.5f, positionsWhite[i].y - 4 + 0.5f }, texturesIndexes[i], WHITE_CHESS_INDEX, app.scaleUI);
                         (*app.data.blackPieces)[i] = createChessPiece({ positionsBlack[i].x - 4 + 0.5f, positionsBlack[i].y - 4 + 0.5f }, texturesIndexes[i], BLACK_CHESS_INDEX, app.scaleUI);
+                        chessboard[(int)(7 - positionsWhite[i].y)][(int)positionsWhite[i].x] = 6 - texturesIndexes[i] + 6;
+                        chessboard[(int)(7 - positionsBlack[i].y)][(int)positionsBlack[i].x] = 6 - texturesIndexes[i];
                     }
-
-                    chessboard = new_chessgame(); 
-                    show_chessboard(chessboard);
 
                     glBindBuffer(GL_ARRAY_BUFFER, app.data.whitePiecesBuffers->VBO);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ChessPiece) * ONE_COLOR_SIZE, app.data.WhitePieces);
@@ -194,13 +202,13 @@ int main(void)
                 if(app.data.activePiece !=nullptr)
                 if (!(toField.x == fromField.x && toField.y == fromField.y) && is_move_allowed(7 - fromField.y, fromField.x, 7- toField.y, toField.x)) {
                     shouldOpenPopUpToselectChessPiece = false;
-
+                    printf("move\n"); 
                     show_chessboard(chessboard); 
 
                     bringBack(app.data.activePiece);
                     updateChessPieceVBO(currentVBO, index, sizeof(ChessPiece), app.data.activePiece);
 
-                    if (isMate()) {
+                    if (lost_white || lost_black) {
                         app.data.isMate = true;
                         app.data.canMakeMove = false;
                     }

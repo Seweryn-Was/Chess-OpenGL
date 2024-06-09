@@ -2,12 +2,14 @@
 #include<algorithm>
 #include "logika.h"
 
+
 Allowed(*chessboard)[8];
 int chessboard_int[8][8];
 int allowed[8][8];
 int without_kings[8][8];
 int white_pieces_attacks[8][8]{};
 int black_pieces_attacks[8][8]{};
+int blocked_pieces[8][8]{};
 int holy_land_black[8][8], holy_land_white[8][8], black_king[2], white_king[2];
 bool lost_black{ false }, lost_white{ false }, black_downfall{ false }, white_downfall{ false };
 
@@ -15,11 +17,12 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
 {
     everywhere_zeros(holy_land_black);
     everywhere_zeros(holy_land_white);
+    everywhere_zeros(blocked_pieces);
     black_downfall = false;
     white_downfall = false;
     everywhere_zeros(black_pieces_attacks);
     everywhere_zeros(white_pieces_attacks);
-    all_possible_moves(chessboard);                             
+    all_possible_moves(chessboard);
     //show_chessboard(black_pieces_attacks);
     show_chessboard(chessboard[y_start][x_start].allowed);
     printf("\n");
@@ -63,6 +66,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         else
         {
+            show_chessboard(chessboard[y_start][x_start].allowed);
             if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
                 chessboard[y_end][x_end] = chessboard[y_start][x_start];
@@ -115,6 +119,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
         }
         else
         {
+            show_chessboard(chessboard[y_start][x_start].allowed);
             if (chessboard[y_start][x_start].allowed[y_end][x_end] == 1)
             {
                 chessboard[y_end][x_end] = chessboard[y_start][x_start];
@@ -417,76 +422,76 @@ Allowed(*(new_chessgame)())[8]
         return fresh_chessboard;
     }
 
-    void block_pieces(int y, int x)
-    {
-        int change{ 6 };
-        if (chessboard[y][x].key >= 7)
-            change = 0;
-        int i = 0;
-        int how_many = 0;
-        int ypom = 0, xpom = 0;
-        for (int j = -1; j <= 1; ++j)
-            for (int k = -1; k <= 1; ++k)
+void block_pieces(int y, int x)
+{
+    int change{ 6 };
+    if (chessboard[y][x].key >= 7)
+        change = 0;
+    int i = 0;
+    int how_many = 0;
+    int ypom = 0, xpom = 0;
+    for (int j = -1; j <= 1; ++j)
+        for (int k = -1; k <= 1; ++k)
+        {
+            int first{}, second{};
+            if (k == 0 && j == 0)
+                continue;
+            if (j * k == 0)
             {
-                int first{}, second{};
-                if (k == 0 && j == 0)
-                    continue;
-                if (j * k == 0)
+                first = 2;
+                second = 5;
+            }
+            else
+            {
+                first = 4;
+                second = 5;
+            }
+            while (y + i * j < 8 && x + i * k < 8 && y + i * j >= 0 && x + i * k >= 0)
+            {
+                int new_y = y + i * j;
+                int new_x = x + i * k;
+                if (chessboard[new_y][new_x].key > 6 - change && chessboard[new_y][new_x].key < 12 - change && chessboard[new_y][new_x].key != 0)
                 {
-                    first = 2;
-                    second = 5;
+                    ypom = new_y;
+                    xpom = new_x;
+                    ++how_many;
                 }
-                else
-                {
-                    first = 4;
-                    second = 5;
-                }
-                while (y + i * j < 8 && x + i * k < 8 && y + i * j >= 0 && x + i * k >= 0)
-                {
-                    int new_y = y + i * j;
-                    int new_x = x + i * k;
-                    if (chessboard[new_y][new_x].key < 7 && chessboard[new_y][new_x].key != 0)
+                if (how_many == 2)
+                    break;
+                if (chessboard[new_y][new_x].key == first + change || chessboard[new_y][new_x].key == second + change)
+                    if (how_many == 1)
                     {
-                        ypom = new_y;
-                        xpom = new_x;
-                        ++how_many;
-                    }
-                    if (how_many == 2)
-                        break;
-                    if (chessboard[new_y][new_x].key == first + change || chessboard[new_y][new_x].key == second + change)
-                        if (how_many == 1)
+                        if (chessboard[ypom][xpom].key == first + 6 - change || chessboard[ypom][xpom].key == second + 6 - change)
                         {
-                            if (chessboard[ypom][xpom].key == first + 6 - change || chessboard[ypom][xpom].key == second + 6 - change)
-                            {
-                                i = 1;
-                                everywhere_zeros(chessboard[ypom][xpom].allowed);
-                                while (ypom + i * j <= 7 && xpom + i * k <= 7)
-                                {
-                                    new_y = ypom + i * j;
-                                    new_x = xpom + i * k;
-                                    if (chessboard[new_y][new_x].key == first + change || chessboard[new_y][new_x].key == second + change)
-                                    {
-                                        chessboard[ypom][xpom].allowed[new_y][new_x] = 1;
-                                        break;
-                                    }
-                                    chessboard[ypom][xpom].allowed[new_y][new_x] = 1;
-                                    ++i;
-                                }
-                                break;
-                            }
+                            i = 1;
                             everywhere_zeros(chessboard[ypom][xpom].allowed);
+                            while (ypom + i * j <= 7 && xpom + i * k <= 7)
+                            {
+                                new_y = ypom + i * j;
+                                new_x = xpom + i * k;
+                                if (chessboard[new_y][new_x].key == first + change || chessboard[new_y][new_x].key == second + change)
+                                {
+                                    chessboard[ypom][xpom].allowed[new_y][new_x] = 1;
+                                    break;
+                                }
+                                chessboard[ypom][xpom].allowed[new_y][new_x] = 1;
+                                ++i;
+                            }
                             break;
                         }
-                    if (chessboard[new_y][new_x].key >= 7)
+                        everywhere_zeros(chessboard[ypom][xpom].allowed);
                         break;
-                    i++;
-                }
-                i = 1;
-                ypom = 0;
-                xpom = 0;
-                how_many = 0;
+                    }
+                if (chessboard[new_y][new_x].key >= 1 + change && chessboard[new_y][new_x].key <= 6 + change)
+                    break;
+                i++;
             }
-    }
+            i = 1;
+            ypom = 0;
+            xpom = 0;
+            how_many = 0;
+        }
+}
 
     void everywhere_zeros(int allowed[][8])
     {

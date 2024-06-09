@@ -24,9 +24,9 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
     everywhere_zeros(white_pieces_attacks);
     all_possible_moves(chessboard);
     //show_chessboard(black_pieces_attacks);
-    std::cout << "black";
-    show_chessboard(holy_land_black);
-    std::cout<<
+    //std::cout << "black";
+    show_chessboard(chessboard[y_start][x_start].allowed);
+    //std::cout<<
     printf("\n");
     show_chessboard(chessboard);
     printf("\n");
@@ -43,7 +43,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(black_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
+                szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
             else
@@ -60,7 +60,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(black_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
+                szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
             else
@@ -78,7 +78,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(black_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
+                szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
             else
@@ -99,7 +99,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(white_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
+                szachen_machen(white_king[0], white_king[1], 1, lost_white, white_downfall, holy_land_white);
                 return true;
             }
             else
@@ -116,7 +116,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(white_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
+                szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
                 return true;
             }
             else
@@ -133,7 +133,7 @@ bool is_move_allowed(int y_start, int x_start, int y_end, int x_end)
                 everywhere_zeros(chessboard[y_start][x_start].allowed);
                 everywhere_zeros(white_pieces_attacks);
                 all_possible_moves(chessboard);
-                //szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
+                szachen_machen(black_king[0], black_king[1], 1, lost_black, black_downfall, holy_land_black);
                 return true;
             }
             else

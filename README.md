@@ -1,9 +1,12 @@
 # credit-project
-projekt zaliczeniowy na przedmiot "Low-level programming in C"
-# wymagania co do projektu
+Projekt zaliczeniowy na przedmiot "Low-level programming in C" Politechnika Poznańska. 
+Jako projekt została wykonana gra w szach. Projket został wykonany w c++, jednakże ze względu na przedmiot styl pisania kodu operał się na składni zbliżonej do języka C. Do wyświetlania graficznego interfejsu został wykorzystany:
+- OpenGl
+- ImGui
+Natmoiast do tworzenia i zarządznia okienkiem aplikaacji biblioteka Glfw.
+  
+# Przediotowe wymagania odnośnie projektu
 - Projekt powinien zostać podzielony w logiczny sposób na moduły
-(http://www.cs.put.poznan.pl/arybarczyk/C_W_5.PDF „Programowanie w dużej
-skali”).
 - Projekt powinien wykonywać operacje na plikach (zapis/odczyt stanu gry, ewentualnie
 zapis/odczyt pliku logu, konfiguracji, statystyk graczy itp.)
 - Projekt powinien posiadać interfejs graficzny (np. biblioteka allegro, SFML lub inna).

@@ -1,4 +1,4 @@
-# credit-project
+# Chess-OpenGL
 Projekt zaliczeniowy na przedmiot "Low-level programming in C" Politechnika Poznańska. 
 Jako projekt została wykonana gra w szach. Projket został wykonany w c++, jednakże ze względu na przedmiot styl pisania kodu operał się na składni zbliżonej do języka C. Do wyświetlania graficznego interfejsu został wykorzystany:
 - OpenGl
